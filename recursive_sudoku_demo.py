@@ -7,20 +7,35 @@ from typing import Iterable, Optional
 
 Board = list[list[int]]
 
+MAX_RECURSION_DEPTH = 0
+BACKTRACK_COUNT = 0
+
 
 class RecursiveSolver:
     """Generic recursive backtracking solver."""
 
     def solve(self) -> Optional[Board]:
+        global MAX_RECURSION_DEPTH, BACKTRACK_COUNT
+        MAX_RECURSION_DEPTH = 0
+        BACKTRACK_COUNT = 0
+        return self._solve_recursive(depth=0)
+
+    def _solve_recursive(self, depth: int) -> Optional[Board]:
+        global MAX_RECURSION_DEPTH, BACKTRACK_COUNT
+
+        if depth > MAX_RECURSION_DEPTH:
+            MAX_RECURSION_DEPTH = depth
+
         # Depth-first recursive backtracking: try each generated move,
         # recurse, and undo when the branch fails.
         if self.is_complete():
             return self.current_state()
 
         for _ in self.next_states():
-            result = self.solve()
+            result = self._solve_recursive(depth + 1)
             if result is not None:
                 return result
+            BACKTRACK_COUNT += 1
             self.undo_last_move()
         return None
 
@@ -160,3 +175,5 @@ if __name__ == "__main__":
     else:
         print("Solved 9x9 Sudoku:\n")
         print(_format_board(solution))
+        print(f"\nMax recursion depth: {MAX_RECURSION_DEPTH}")
+        print(f"Backtracks: {BACKTRACK_COUNT}")

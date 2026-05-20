@@ -1,5 +1,6 @@
 import unittest
 
+import recursive_sudoku_demo as sudoku_demo
 from recursive_sudoku_demo import SudokuSolver
 
 
@@ -31,6 +32,8 @@ class SudokuSolverTests(unittest.TestCase):
         solution = SudokuSolver(puzzle).solve()
 
         self.assertEqual(solution, expected)
+        self.assertGreater(sudoku_demo.MAX_RECURSION_DEPTH, 0)
+        self.assertGreaterEqual(sudoku_demo.BACKTRACK_COUNT, 0)
 
     def test_raises_for_invalid_givens(self):
         invalid_puzzle = [
@@ -89,6 +92,8 @@ class SudokuSolverTests(unittest.TestCase):
         solution = SudokuSolver(solved).solve()
 
         self.assertEqual(solution, solved)
+        self.assertEqual(sudoku_demo.MAX_RECURSION_DEPTH, 0)
+        self.assertEqual(sudoku_demo.BACKTRACK_COUNT, 0)
 
 
 if __name__ == "__main__":
