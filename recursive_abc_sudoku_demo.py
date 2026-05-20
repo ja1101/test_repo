@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from copy import deepcopy
 from math import isqrt
 from typing import Iterable, Optional
@@ -9,7 +8,7 @@ from typing import Iterable, Optional
 Board = list[list[int]]
 
 
-class RecursiveSolver(ABC):
+class RecursiveSolver:
     """Generic recursive backtracking solver."""
 
     def solve(self) -> Optional[Board]:
@@ -23,17 +22,17 @@ class RecursiveSolver(ABC):
             self.undo_last_move()
         return None
 
-    @abstractmethod
-    def is_complete(self) -> bool: ...
+    def is_complete(self) -> bool:
+        raise NotImplementedError
 
-    @abstractmethod
-    def current_state(self) -> Board: ...
+    def current_state(self) -> Board:
+        raise NotImplementedError
 
-    @abstractmethod
-    def next_states(self) -> Iterable[None]: ...
+    def next_states(self) -> Iterable[None]:
+        raise NotImplementedError
 
-    @abstractmethod
-    def undo_last_move(self) -> None: ...
+    def undo_last_move(self) -> None:
+        raise NotImplementedError
 
 
 class SudokuSolver(RecursiveSolver):
