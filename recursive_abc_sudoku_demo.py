@@ -12,6 +12,8 @@ class RecursiveSolver:
     """Generic recursive backtracking solver."""
 
     def solve(self) -> Optional[Board]:
+        # Depth-first recursive backtracking: try each generated move,
+        # recurse, and undo when the branch fails.
         if self.is_complete():
             return self.current_state()
 
@@ -50,6 +52,8 @@ class SudokuSolver(RecursiveSolver):
         return deepcopy(self.board)
 
     def next_states(self) -> Iterable[None]:
+        # Generate candidate moves in-place for one chosen empty cell.
+        # Each yielded state must later be reverted via undo_last_move().
         empty = self._find_empty()
         if empty is None:
             return
@@ -62,6 +66,7 @@ class SudokuSolver(RecursiveSolver):
                 yield
 
     def undo_last_move(self) -> None:
+        # Revert the most recent in-place assignment for backtracking.
         row, col = self._move_stack.pop()
         self.board[row][col] = 0
 
@@ -86,11 +91,13 @@ class SudokuSolver(RecursiveSolver):
         return best_cell
 
     def _count_candidates(self, row: int, col: int) -> int:
+        # Count legal digits for a cell to support MRV selection.
         return sum(
             1 for num in range(1, self._size + 1) if self._is_valid(row, col, num)
         )
 
     def _is_valid(self, row: int, col: int, num: int) -> bool:
+        # Check row, column, and box constraints for a tentative placement.
         if num in self.board[row]:
             return False
         if any(self.board[r][col] == num for r in range(self._size)):
@@ -105,6 +112,7 @@ class SudokuSolver(RecursiveSolver):
         return True
 
     def _validate_initial_board(self) -> None:
+        # Validate board shape/range and ensure givens do not conflict.
         if self._size == 0:
             raise ValueError("Board must not be empty.")
         if any(len(row) != self._size for row in self.board):
