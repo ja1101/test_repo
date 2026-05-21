@@ -35,6 +35,18 @@ class SudokuSolverTests(unittest.TestCase):
         self.assertGreater(sudoku_demo.MAX_RECURSION_DEPTH, 0)
         self.assertGreaterEqual(sudoku_demo.BACKTRACK_COUNT, 0)
 
+    def test_returns_none_for_unsolvable_puzzle(self):
+        unsolvable_puzzle = [
+            [1, 2, 3, 4],
+            [3, 0, 0, 0],
+            [0, 4, 0, 0],
+            [0, 0, 0, 0],
+        ]
+
+        solution = SudokuSolver(unsolvable_puzzle).solve()
+
+        self.assertIsNone(solution)
+
     def test_raises_for_invalid_givens(self):
         invalid_puzzle = [
             [5, 5, 0, 0, 7, 0, 0, 0, 0],
