@@ -11,8 +11,13 @@ MAX_RECURSION_DEPTH = 0
 BACKTRACK_COUNT = 0
 
 
-class RecursiveSolver:
-    """Generic recursive backtracking solver."""
+class SudokuSolver:
+    def __init__(self, board: Board):
+        self.board = deepcopy(board)
+        self._size = len(self.board)
+        self._box_size = isqrt(self._size)
+        self._move_stack: list[tuple[int, int]] = []
+        self._validate_initial_board()
 
     def solve(self) -> Optional[Board]:
         global MAX_RECURSION_DEPTH, BACKTRACK_COUNT
@@ -38,27 +43,6 @@ class RecursiveSolver:
             BACKTRACK_COUNT += 1
             self.undo_last_move()
         return None
-
-    def is_complete(self) -> bool:
-        raise NotImplementedError
-
-    def current_state(self) -> Board:
-        raise NotImplementedError
-
-    def next_states(self) -> Iterable[None]:
-        raise NotImplementedError
-
-    def undo_last_move(self) -> None:
-        raise NotImplementedError
-
-
-class SudokuSolver(RecursiveSolver):
-    def __init__(self, board: Board):
-        self.board = deepcopy(board)
-        self._size = len(self.board)
-        self._box_size = isqrt(self._size)
-        self._move_stack: list[tuple[int, int]] = []
-        self._validate_initial_board()
 
     def is_complete(self) -> bool:
         return self._find_empty() is None
